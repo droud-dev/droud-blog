@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import { formatDate, getBlogPosts, strToTitleCase } from '@/utils';
+import { formatDate, getBlogPosts, postTitle } from '@/utils';
 import Image from 'next/image';
 
 export function BlogPosts() {
@@ -18,7 +18,7 @@ export function BlogPosts() {
                                 <Image className="h-full w-full object-cover hover:scale-125 transition ease-in-out" src={post.metadata.image} alt={post.metadata.alt || `Decorative cover image for the blog post`} width="350" height="200" /> 
                             </div>}
                             <div className="flex flex-col justify-between space-y-1 px-5 py-3 h-55 w-100">
-                                <p className="mb-2 text-2xl font-bold tracking-tight ">{strToTitleCase(post.metadata.title ? post.metadata.title : post.slug.replaceAll('-', ' '))}</p>
+                                <p className="mb-2 text-2xl font-bold tracking-tight ">{postTitle(post)}</p>
                                 <p className="mb-3 font-normal line-clamp-3">{post.metadata.summary}</p>
                                 <p className="text-gray-700 dark:text-gray-400 pb-2">{formatDate(post.metadata.date, false)}</p>
 

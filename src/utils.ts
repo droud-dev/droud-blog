@@ -108,3 +108,10 @@ export const findPost = (slug: string) => {
 }
 
 export const strToTitleCase = (text: string) => text.replace(/[^-\s]+/g, s => s.charAt(0).toUpperCase() + s.substring(1).toLowerCase())
+export const postTitle = (post: { slug: string, metadata: { title?: string }}) => {
+  let title = post.metadata.title;
+
+  if (!title) title = post.slug.replaceAll('-', ' ');
+
+  return strToTitleCase(title);
+}

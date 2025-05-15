@@ -1,6 +1,6 @@
 import { notFound } from 'next/navigation'
 import { CustomMDX } from '@/components/mdx'
-import { findPost, formatDate, getBlogPosts, strToTitleCase } from '@/utils'
+import { findPost, formatDate, getBlogPosts, postTitle } from '@/utils'
 import { baseUrl } from '@/app/sitemap'
 import Link from 'next/link'
 
@@ -89,7 +89,7 @@ export default async function Blog(props: { params: any }) {
         />
         <div className="flex flex-col justify-between text-center items-center mt-2 mb-8 text-sm">
             <h1 className="title font-semibold text-2xl tracking-tighter mb-2 text-gray-900 dark:text-white">
-                {strToTitleCase(post.metadata.title ? post.metadata.title : post.slug.replaceAll('-', ' '))}
+                {postTitle(post)}
             </h1>
             <p className="text-sm text-neutral-600 dark:text-neutral-400">
                 {formatDate(post.metadata.date)}
@@ -103,10 +103,10 @@ export default async function Blog(props: { params: any }) {
                 <svg className="w-2.5 h-2.5 ms-2 rotate-180" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 6 10">
                     <path stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="m1 9 4-4-4-4"/>
                 </svg>
-                <span className="pl-1 max-w-50 truncate">{prev?.metadata.title}</span>
+                <span className="pl-1 max-w-50 truncate">{postTitle(prev)}</span>
             </Link> }
             { next && <Link href={`/${next?.slug}`} className="py-2 pl-3 pr-2 text-sm inline-flex items-center font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-cyan-800 focus:z-10 focus:ring-4 focus:ring-gray-100 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700">
-                <span className="pr-0 max-w-50 truncate">{next?.metadata.title}</span>
+                <span className="pr-0 max-w-50 truncate">{postTitle(next)}</span>
                 <svg className="w-2.5 h-2.5 ms-2 rtl:rotate-180" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 6 10">
                     <path stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="m1 9 4-4-4-4"/>
                 </svg>
