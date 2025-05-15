@@ -6,6 +6,7 @@ type Metadata = {
   date: string
   summary: string
   image?: string
+  alt?: string
 }
 
 function parseFrontmatter(fileContent: string) {
@@ -51,7 +52,9 @@ function getMDXData(dir: string) {
 
 export function getBlogPosts() {
   // TODO: Pagination
-  return getMDXData(path.join(process.cwd(), 'src', 'content'))
+  return getMDXData(path.join(process.cwd(), 'src', 'content')).sort((a, b) => 
+      new Date(a.metadata.date) > new Date(b.metadata.date) ? -1 : 1
+  );
 }
 
 export function formatDate(date: string, includeRelative = false) {
@@ -89,3 +92,19 @@ export function formatDate(date: string, includeRelative = false) {
 
   return `${fullDate} (${formattedDate})`
 }
+
+export const findPost = (slug: string) => {
+  const posts = getBlogPosts()
+  // const posts = .find((post) => post.slug === slug);
+  const idx = posts.findIndex(p => p.slug == slug);
+
+  if (idx == -1) return { post: null, prev: null, next: null };
+
+  return {
+    post: posts[idx],
+    prev: idx > 0 ? posts[idx - 1] : null,
+    next: idx < (posts.length - 1) ? posts[idx + 1] : null,
+  }
+}
+
+export const strToTitleCase = (text: string) => text.replace(/[^-\s]+/g, s => s.charAt(0).toUpperCase() + s.substring(1).toLowerCase())

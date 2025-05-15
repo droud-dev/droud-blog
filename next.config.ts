@@ -11,6 +11,10 @@ const nextConfig: NextConfig = {
   pageExtensions: ['tsx', 'mdx'],
   transpilePackages: ['next-mdx-remote'],
   basePath: process.env.PAGES_BASE_PATH,
+  images: { 
+    unoptimized: true, // output: export doesn't support optimised images
+    path: '/',
+  }, 
 };
 
 const withMDX = createMDX({
