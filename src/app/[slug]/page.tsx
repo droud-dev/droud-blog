@@ -75,7 +75,7 @@ export default async function Page({ params }: { params: Promise<{ slug: string 
 
     if (!post) return redirect('/');
 
-    return (<>
+    return (<section className="prose md:prose-lg lg:prose-xl prose-img:rounded-xl w-full max-w-screen prose-slate dark:prose-invert">
         { post.metadata.image && <div 
             className="hidden md:block md:h-50 lg:h-100 w-full bg-cover bg-center bg-no-repeat" 
             style={{ backgroundAttachment: 'fixed', backgroundImage: `url(${post.metadata.image})`}}>&nbsp;</div>
@@ -95,11 +95,12 @@ export default async function Page({ params }: { params: Promise<{ slug: string 
             </div>
         </article>
         { genNav(post, prev, next) }
-    </>);
+    </section>);
 }
  
 export function generateStaticParams() {
-    return getBlogPosts();
+    // Because NextJS throws a fit if you don't generate all pages during build, we must override the filtering
+    return getBlogPosts(0, 0, false); 
 }
  
 export const dynamicParams = false
