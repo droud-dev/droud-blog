@@ -5,6 +5,12 @@ import rehypeExternalLinks from 'rehype-external-links';
 import rehypeSlug from 'rehype-slug'; 
 import rehypeAutolinkHeadings from 'rehype-autolink-headings';
 import rehypePresetMinify from 'rehype-preset-minify'; 
+import remarkToc from 'remark-toc';
+import remarkFrontmatter from 'remark-frontmatter';
+import a11yEmoji from '@fec/remark-a11y-emoji';
+import supersub from 'remark-supersub';
+import rehypeHighlight from 'rehype-highlight';
+import rehypeGithubEmoji from 'rehype-github-emoji';
 
 const nextConfig: NextConfig = {
   output: 'export',
@@ -21,18 +27,30 @@ const withMDX = createMDX({
   options: {
     remarkPlugins: [
       // Add GitHub Flavored Markdown (GFM) support
+      // ['remark-gfm',]
+      remarkFrontmatter,
       remarkGfm,
+      remarkToc,
+      a11yEmoji,
+      supersub,
     ],
     rehypePlugins: [
-      // add rel (and target) attributes to external links
+      // // TODO: chuck these into the mdx.tsx file
+      // // add rel (and target) attributes to external links
+      // ['rehype-external-links', { target: '_blank', rel: 'nofollow' }],
       [rehypeExternalLinks, { target: '_blank', rel: 'nofollow' }],
-      // Generate heading ids for rehype-autolink-headings
+      // // Generate heading ids for rehype-autolink-headings
       rehypeSlug,
-      // To pass options, use a 2-element array with the
-      // configuration in an object in the second element
+      // ['rehype-slug',]
+      // // To pass options, use a 2-element array with the
+      // // configuration in an object in the second element
+      // ['rehype-autolink-headings', { behavior: `wrap` }],
       [rehypeAutolinkHeadings, { behavior: `wrap` }],
-      // Minify HTML & CSS
+      // // Minify HTML & CSS
+      // ['rehype-preset-minify',],
       rehypePresetMinify,
+      rehypeHighlight,
+      rehypeGithubEmoji,
     ],
   }
 });

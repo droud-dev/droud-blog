@@ -1,15 +1,22 @@
 import fs from 'fs'
 import path from 'path'
 
-type Metadata = {
+export type Metadata = {
   title: string
   date: string
   summary: string
   image?: string
   alt?: string
+  hidden?: string
 }
 
-function parseFrontmatter(fileContent: string) {
+export type Post = {
+  metadata: Metadata
+  slug: string
+  content: string
+}
+
+function parseFrontmatter(fileContent: string): Omit<Post, 'slug'> {
   let frontmatterRegex = /---\s*([\s\S]*?)\s*---/
   let match = frontmatterRegex.exec(fileContent)
   let frontMatterBlock = match && match[1]
@@ -27,18 +34,18 @@ function parseFrontmatter(fileContent: string) {
   return { metadata: metadata as Metadata, content }
 }
 
-function getMDXFiles(dir: fs.PathLike) {
+function getMDXFiles(dir: fs.PathLike): string[] {
   return fs.readdirSync(dir).filter((file) => path.extname(file) === '.mdx')
 }
 
-function readMDXFile(filePath: fs.PathOrFileDescriptor) {
+function readMDXFile(filePath: fs.PathOrFileDescriptor): Omit<Post, 'slug'> {
   let rawContent = fs.readFileSync(filePath, 'utf-8')
   return parseFrontmatter(rawContent)
 }
 
-function getMDXData(dir: string) {
+function getMDXData(dir: string): Post[] {
   let mdxFiles = getMDXFiles(dir)
-  return mdxFiles.map((file: string) => {
+  return mdxFiles.map((file: string): Post => {
     let { metadata, content } = readMDXFile(path.join(dir, file))
     let slug = path.basename(file, path.extname(file))
 
@@ -50,14 +57,22 @@ function getMDXData(dir: string) {
   })
 }
 
-export function getBlogPosts() {
-  // TODO: Pagination
-  return getMDXData(path.join(process.cwd(), 'src', 'content')).sort((a, b) => 
-      new Date(a.metadata.date) > new Date(b.metadata.date) ? -1 : 1
-  );
+export function getBlogPosts(page = 1, limit = 10, published = true): Post[] {
+  let posts = getMDXData(path.join(process.cwd(), 'src', 'content'))
+  
+  if (published) posts = posts.filter(post => 
+    (!post.metadata.hidden || post.metadata.hidden != "true") && 
+    (!post.metadata.date || (new Date(post.metadata.date) <= new Date())) );
+  
+  posts = posts.sort((a, b) => new Date(a.metadata.date) > new Date(b.metadata.date) ? -1 : 1 );
+  
+  // Disable pagination if we set page to be 0
+  if (page > 0) posts = posts.slice((page - 1) * limit, limit);
+
+  return posts;
 }
 
-export function formatDate(date: string, includeRelative = false) {
+export function formatDate(date: string, includeRelative = false): string {
   if (!date) return '';
 
   let currentDate = new Date()
@@ -93,7 +108,7 @@ export function formatDate(date: string, includeRelative = false) {
   return `${fullDate} (${formattedDate})`
 }
 
-export const findPost = (slug: string) => {
+export const findPost = (slug: string): { post: Post | null, prev: Post | null, next: Post | null} => {
   const posts = getBlogPosts()
   // const posts = .find((post) => post.slug === slug);
   const idx = posts.findIndex(p => p.slug == slug);
