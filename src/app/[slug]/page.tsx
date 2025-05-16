@@ -14,6 +14,7 @@ const genNav = (post: Post | null, prev: Post | null, next: Post | null) => {
                 </svg>
                 <span className="pl-1 max-w-50 truncate">{postTitle(prev)}</span>
             </Link> }
+            {!prev && <div>&nbsp;</div>}
             <Link className={`py-2 pl-3 pr-2 ${btnStyle}`} href='/'>
                 Home
             </Link>
@@ -23,6 +24,7 @@ const genNav = (post: Post | null, prev: Post | null, next: Post | null) => {
                     <path stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="m1 9 4-4-4-4"/>
                 </svg>
             </Link> }
+            {!next && <div>&nbsp;</div>}
         </nav>
     </>)
 };
@@ -82,7 +84,7 @@ export default async function Page({ params }: { params: Promise<{ slug: string 
         }
         { genNav(post, prev, next) }
         <article className="prose-a:no-underline prose-a:hover:underline">
-            <div className="w-full lg:w-1/2 mx-auto pt-5">
+            <div className="w-full max-w-screen lg:max-w-4xl min-w-xs mx-auto p-5">
                 <div className="flex flex-col justify-between text-center items-center my-2 text-sm">
                     <h1 className="mb-0 title font-semibold text-2xl tracking-tighter text-gray-900 dark:text-white">
                         {postTitle(post)}
