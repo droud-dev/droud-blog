@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { redirect } from "next/navigation";
+import { notFound } from 'next/navigation'
 import { findPost, formatDate, getBlogPosts, postTitle } from "@/utils";
 import { baseUrl } from '@/app/sitemap'
 import type { Post } from "@/utils";
@@ -71,9 +71,9 @@ export async function generateMetadata(props: { params: any }) {
 export default async function Page({ params }: { params: Promise<{ slug: string }> }) {
     const { slug } = await params
     const { default: Post } = await import(`@/content/${slug}.mdx`);
-    const { post, prev, next } = findPost(slug);
+    const { post, prev, next, available } = findPost(slug);
 
-    if (!post) return redirect('/');
+    if (!post || !available) return notFound();
 
     return (<section className="prose md:prose-lg lg:prose-xl prose-img:rounded-xl w-full max-w-screen prose-slate dark:prose-invert">
         { post.metadata.image && <div 

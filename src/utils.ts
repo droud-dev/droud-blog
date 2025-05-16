@@ -57,12 +57,14 @@ function getMDXData(dir: string): Post[] {
   })
 }
 
+const isPostPublished = (post: Post)=> 
+    (!post.metadata.hidden || post.metadata.hidden != "true") && 
+    (!post.metadata.date || (new Date(post.metadata.date) <= new Date()));
+
 export function getBlogPosts(page = 1, limit = 10, published = true): Post[] {
   let posts = getMDXData(path.join(process.cwd(), 'src', 'content'))
   
-  if (published) posts = posts.filter(post => 
-    (!post.metadata.hidden || post.metadata.hidden != "true") && 
-    (!post.metadata.date || (new Date(post.metadata.date) <= new Date())) );
+  if (published) posts = posts.filter(isPostPublished);
   
   posts = posts.sort((a, b) => new Date(a.metadata.date) > new Date(b.metadata.date) ? -1 : 1 );
   
@@ -108,17 +110,19 @@ export function formatDate(date: string, includeRelative = false): string {
   return `${fullDate} (${formattedDate})`
 }
 
-export const findPost = (slug: string): { post: Post | null, prev: Post | null, next: Post | null} => {
-  const posts = getBlogPosts()
-  // const posts = .find((post) => post.slug === slug);
+export const findPost = (slug: string): { post: Post | null, prev: Post | null, next: Post | null, available: boolean} => {
+  const posts = getBlogPosts(0,0, true);
   const idx = posts.findIndex(p => p.slug == slug);
 
-  if (idx == -1) return { post: null, prev: null, next: null };
+  if (idx == -1) return { post: null, prev: null, next: null, available: false };
+
+  const isVisible = isPostPublished(posts[idx]);
 
   return {
     post: posts[idx],
     prev: idx > 0 ? posts[idx - 1] : null,
     next: idx < (posts.length - 1) ? posts[idx + 1] : null,
+    available: isVisible,
   }
 }
 
