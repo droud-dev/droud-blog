@@ -9,6 +9,7 @@ import remarkToc from 'remark-toc';
 import remarkFrontmatter from 'remark-frontmatter';
 import a11yEmoji from '@fec/remark-a11y-emoji';
 import supersub from 'remark-supersub';
+import collapse from 'remark-collapse';
 import rehypeHighlight from 'rehype-highlight';
 import rehypeGithubEmoji from 'rehype-github-emoji';
 
@@ -30,9 +31,10 @@ const withMDX = createMDX({
       // ['remark-gfm',]
       remarkFrontmatter,
       remarkGfm,
-      remarkToc,
+      [remarkToc, { tight: true }],
       a11yEmoji,
       supersub,
+      // [collapse, { test: /(table[ -]of[ -])?contents?|toc/i }]
     ],
     rehypePlugins: [
       // // TODO: chuck these into the mdx.tsx file

@@ -110,19 +110,16 @@ export function formatDate(date: string, includeRelative = false): string {
   return `${fullDate} (${formattedDate})`
 }
 
-export const findPost = (slug: string): { post: Post | null, prev: Post | null, next: Post | null, available: boolean} => {
-  const posts = getBlogPosts(0,0, true);
+export const findPost = (slug: string): { post: Post | null, prev: Post | null, next: Post | null} => {
+  const posts = getBlogPosts(0,0, process.env.NODE_ENV == 'production');
   const idx = posts.findIndex(p => p.slug == slug);
 
-  if (idx == -1) return { post: null, prev: null, next: null, available: false };
-
-  const isVisible = isPostPublished(posts[idx]);
+  if (idx == -1) return { post: null, prev: null, next: null };
 
   return {
     post: posts[idx],
     prev: idx > 0 ? posts[idx - 1] : null,
-    next: idx < (posts.length - 1) ? posts[idx + 1] : null,
-    available: isVisible,
+    next: idx < (posts.length - 1) ? posts[idx + 1] : null
   }
 }
 

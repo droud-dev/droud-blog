@@ -28,6 +28,7 @@
 		"rehype-preset-minify": "^7.0.1",
 		"rehype-slug": "^6.0.0",
 		"remark": "^15.0.1",
+		"remark-collapse": "^0.1.2",
 		"remark-emoji": "^5.0.1",
 		"remark-frontmatter": "^5.0.0",
 		"remark-gfm": "^4.0.1",

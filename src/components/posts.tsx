@@ -3,6 +3,7 @@ import { formatDate, getBlogPosts, postTitle } from '@/utils';
 import Image from 'next/image';
 
 export function BlogPosts() {
+    // TODO: pagination
     let allBlogs = getBlogPosts();
 
     return (

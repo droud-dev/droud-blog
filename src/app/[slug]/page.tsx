@@ -73,9 +73,10 @@ export async function generateMetadata(props: { params: any }) {
 export default async function Page({ params }: { params: Promise<{ slug: string }> }) {
     const { slug } = await params
     const { default: Post } = await import(`@/content/${slug}.mdx`);
-    const { post, prev, next, available } = findPost(slug);
+    const { post, prev, next } = findPost(slug);
 
-    if (!post || !available) return notFound();
+    // Allows for browser previewing in dev without the option of accidentally leaving available = true
+    if (!post) return notFound();
 
     return (<section className="prose md:prose-lg lg:prose-xl prose-img:rounded-xl w-full max-w-screen prose-slate dark:prose-invert">
         { post.metadata.image && <div 
@@ -83,18 +84,16 @@ export default async function Page({ params }: { params: Promise<{ slug: string 
             style={{ backgroundAttachment: 'fixed', backgroundImage: `url(${post.metadata.image})`}}>&nbsp;</div>
         }
         { genNav(post, prev, next) }
-        <article className="prose-a:no-underline prose-a:hover:underline">
-            <div className="w-full max-w-screen lg:max-w-4xl min-w-xs mx-auto p-5">
-                <div className="flex flex-col justify-between text-center items-center my-2 text-sm">
-                    <h1 className="mb-0 title font-semibold text-2xl tracking-tighter text-gray-900 dark:text-white">
-                        {postTitle(post)}
-                    </h1>
-                    <p className="text-sm text-neutral-600 dark:text-neutral-400 not-prose">
-                        {formatDate(post.metadata.date)}
-                    </p>
-                </div>
-                <Post />
+        <article className="w-full max-w-screen lg:max-w-4xl min-w-xs mx-auto p-5">
+            <div className="flex flex-col justify-between text-center items-center my-2 text-sm">
+                <h1 className="mb-0 title font-semibold text-2xl tracking-tighter text-gray-900 dark:text-white">
+                    {postTitle(post)}
+                </h1>
+                <p className="text-sm text-neutral-600 dark:text-neutral-400 not-prose">
+                    {formatDate(post.metadata.date)}
+                </p>
             </div>
+            <Post />
         </article>
         { genNav(post, prev, next) }
     </section>);
