@@ -1,0 +1,1 @@
+[![Deploy Next.js site to Pages](https://github.com/droud-dev/droud-blog/actions/workflows/deploy.yml/badge.svg?branch=main)](https://github.com/droud-dev/droud-blog/actions/workflows/deploy.yml)
