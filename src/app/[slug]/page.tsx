@@ -78,6 +78,8 @@ export default async function Page({ params }: { params: Promise<{ slug: string 
     // Allows for browser previewing in dev without the option of accidentally leaving available = true
     if (!post) return notFound();
 
+    // TODO: TOC into popout sidebar
+
     return (<section className="prose md:prose-lg lg:prose-xl prose-img:rounded-xl w-full max-w-screen prose-slate dark:prose-invert">
         { post.metadata.image && <div 
             className="hidden md:block md:h-50 lg:h-100 w-full bg-cover bg-center bg-no-repeat" 

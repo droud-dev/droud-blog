@@ -4,7 +4,7 @@ import Image from 'next/image';
 
 export function BlogPosts() {
     // TODO: pagination
-    let allBlogs = getBlogPosts();
+    let allBlogs = getBlogPosts(0);
 
     return (
         <div className="flex flex-row flex-wrap justify-center items-start">{ allBlogs.map((post) => (
